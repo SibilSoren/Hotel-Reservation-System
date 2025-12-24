@@ -51,7 +51,7 @@ public class HotelResource {
         this.reservationService.addRoom(room);
     }
 
-    public Collection<IRoom> findARoom(Date checkIn, Date checkOut) {
-        return reservationService.findRooms(checkIn, checkOut);
+    public Collection<IRoom> findARoom(Date checkIn, Date checkOut, Boolean filterFreeRooms) {
+        return reservationService.findRooms(checkIn, checkOut, filterFreeRooms);
     }
 }

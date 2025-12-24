@@ -89,8 +89,18 @@ public class MainMenu {
             year = utils.convertStringToNumber(dateSplit[2]);
             checkOutDate.set(year, month, day);
 
+            // Ask for room type preference
+            System.out.println("What type of room? (1) All  (2) Free only  (3) Paid only:");
+            String roomTypeChoice = sc.nextLine().trim();
+            Boolean filterFreeRooms = null; // default: all rooms
+            if (roomTypeChoice.equals("2")) {
+                filterFreeRooms = true; // free only
+            } else if (roomTypeChoice.equals("3")) {
+                filterFreeRooms = false; // paid only
+            }
+
             Collection<IRoom> availableRooms = hotelResource.findARoom(checkInDate.getTime(),
-                    checkOutDate.getTime());
+                    checkOutDate.getTime(), filterFreeRooms);
 
             if (availableRooms.isEmpty()) {
                 System.out.println("No rooms available for the given dates");

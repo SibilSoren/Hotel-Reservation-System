@@ -61,7 +61,7 @@ public class ReservationService {
         return customerReservations;
     }
 
-    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate) {
+    public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate, Boolean filterFreeRooms) {
         Collection<IRoom> availableRooms = new ArrayList<>();
         Set<String> reservedRooms = new HashSet<>();
 
@@ -76,7 +76,10 @@ public class ReservationService {
 
         for (IRoom room : rooms.values()) {
             if (!reservedRooms.contains(room.getRoomNumber())) {
-                availableRooms.add(room);
+                // Apply filter if specified
+                if (filterFreeRooms == null || filterFreeRooms == room.isFree()) {
+                    availableRooms.add(room);
+                }
             }
         }
 

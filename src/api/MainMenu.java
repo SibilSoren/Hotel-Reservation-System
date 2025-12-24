@@ -1,6 +1,5 @@
 package api;
 
-import java.sql.Date;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Scanner;

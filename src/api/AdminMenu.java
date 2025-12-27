@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import model.FreeRoom;
 import model.IRoom;
-import model.Reservation;
 import model.Room;
 import model.RoomType;
 

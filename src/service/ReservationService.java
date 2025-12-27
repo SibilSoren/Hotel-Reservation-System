@@ -36,14 +36,17 @@ public class ReservationService {
 
     public Reservation reserveARoom(Customer customer, IRoom room, Date checkInDate, Date checkOutDate) {
         Reservation reservation = new Reservation(customer, room, checkInDate, checkOutDate);
-        if (reservations.containsKey(customer.getEmail())) {
-            ArrayList<Reservation> userReservations = reservations.get(customer.getEmail());
+        addReservationToMap(customer.getEmail(), reservation);
+        return reservation;
+    }
+
+    private void addReservationToMap(String customerEmail, Reservation reservation) {
+        if (reservations.containsKey(customerEmail)) {
+            ArrayList<Reservation> userReservations = reservations.get(customerEmail);
             userReservations.add(reservation);
         } else {
-            reservations.put(customer.getEmail(), new ArrayList<Reservation>(List.of(reservation)));
+            reservations.put(customerEmail, new ArrayList<Reservation>(List.of(reservation)));
         }
-
-        return reservation;
     }
 
     public void printAllReservation() {
@@ -63,16 +66,7 @@ public class ReservationService {
 
     public Collection<IRoom> findRooms(Date checkInDate, Date checkOutDate, Boolean filterFreeRooms) {
         Collection<IRoom> availableRooms = new ArrayList<>();
-        Set<String> reservedRooms = new HashSet<>();
-
-        for (ArrayList<Reservation> userReservations : reservations.values()) {
-            for (Reservation reservation : userReservations) {
-                if (checkInDate.before(reservation.getCheckOutDate())
-                        && checkOutDate.after(reservation.getCheckInDate())) {
-                    reservedRooms.add(reservation.getRoom().getRoomNumber());
-                }
-            }
-        }
+        Set<String> reservedRooms = getReservedRoomNumbers(checkInDate, checkOutDate);
 
         for (IRoom room : rooms.values()) {
             if (!reservedRooms.contains(room.getRoomNumber())) {
@@ -84,5 +78,18 @@ public class ReservationService {
         }
 
         return availableRooms;
+    }
+
+    private Set<String> getReservedRoomNumbers(Date checkInDate, Date checkOutDate) {
+        Set<String> reservedRooms = new HashSet<>();
+        for (ArrayList<Reservation> userReservations : reservations.values()) {
+            for (Reservation reservation : userReservations) {
+                if (checkInDate.before(reservation.getCheckOutDate())
+                        && checkOutDate.after(reservation.getCheckInDate())) {
+                    reservedRooms.add(reservation.getRoom().getRoomNumber());
+                }
+            }
+        }
+        return reservedRooms;
     }
 }

@@ -62,41 +62,58 @@ public class AdminMenu {
     }
 
     public void addARoom(Scanner sc) {
-        // Get room number
-        System.out.println("Enter room number:");
-        String roomNumber = sc.nextLine();
-
-        // Get price with validation loop
-        double price = 0;
-        boolean validPrice = false;
-        while (!validPrice) {
-            try {
-                System.out.println("Enter room price:");
-                String priceInput = sc.nextLine();
-                price = Double.parseDouble(priceInput);
-                validPrice = true;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid price. Please enter a valid number.");
+        try {
+            // Get room number with validation
+            String roomNumber = null;
+            boolean validRoomNumber = false;
+            while (!validRoomNumber) {
+                System.out.println("Enter room number:");
+                roomNumber = sc.nextLine();
+                if (roomNumber == null || roomNumber.trim().isEmpty()) {
+                    System.out.println("Error: Room number cannot be null or empty. Please enter a valid room number.");
+                } else {
+                    validRoomNumber = true;
+                }
             }
-        }
 
-        // Get room type with validation loop
-        RoomType roomType = null;
-        boolean validType = false;
-        while (!validType) {
-            try {
-                System.out.println("Enter room type (SINGLE/DOUBLE):");
-                String typeInput = sc.nextLine().toUpperCase();
-                roomType = RoomType.valueOf(typeInput);
-                validType = true;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid room type. Please enter SINGLE or DOUBLE.");
+            // Get price with validation loop
+            double price = 0;
+            boolean validPrice = false;
+            while (!validPrice) {
+                try {
+                    System.out.println("Enter room price:");
+                    String priceInput = sc.nextLine();
+                    price = Double.parseDouble(priceInput);
+                    if (price < 0) {
+                        System.out.println("Error: Room price cannot be negative. Please enter a valid price.");
+                    } else {
+                        validPrice = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid price. Please enter a valid number.");
+                }
             }
-        }
 
-        IRoom room = new Room(roomNumber, price, roomType);
-        hotelResource.addARoom(room);
-        System.out.println("Room added successfully!");
+            // Get room type with validation loop
+            RoomType roomType = null;
+            boolean validType = false;
+            while (!validType) {
+                try {
+                    System.out.println("Enter room type (SINGLE/DOUBLE):");
+                    String typeInput = sc.nextLine().toUpperCase();
+                    roomType = RoomType.valueOf(typeInput);
+                    validType = true;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid room type. Please enter SINGLE or DOUBLE.");
+                }
+            }
+
+            IRoom room = new Room(roomNumber, price, roomType);
+            hotelResource.addARoom(room);
+            System.out.println("Room added successfully!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     public void populateTestData() {

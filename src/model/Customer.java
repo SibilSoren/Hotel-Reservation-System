@@ -6,16 +6,16 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String email;
-    private final String emailRegex = "^(.+)@(.+).(.+)$";
-    private final Pattern pattern =  Pattern.compile(emailRegex);
+    private final String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+    private final Pattern pattern = Pattern.compile(emailRegex);
 
-    public Customer(String email, String lastName, String firstName) {
-        if(!pattern.matcher(email).matches()){
+    public Customer(String email, String firstName, String lastName) {
+        if (!pattern.matcher(email).matches()) {
             throw new IllegalArgumentException("Error, Invalid email");
         }
         this.email = email;
-        this.lastName = lastName;
         this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getFirstName() {
@@ -39,7 +39,7 @@ public class Customer {
     }
 
     public void setEmail(String email) {
-        if(!pattern.matcher(email).matches()){
+        if (!pattern.matcher(email).matches()) {
             throw new IllegalArgumentException("Error, Invalid email");
         }
         this.email = email;

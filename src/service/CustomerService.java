@@ -3,6 +3,7 @@ package service;
 import model.Customer;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class CustomerService {
     // Singleton instance
@@ -19,8 +20,16 @@ public class CustomerService {
     }
 
     public void addCustomer(String email, String firstName, String lastName) {
+        if (!isValidEmail(email)) {
+            throw new IllegalArgumentException("Invalid email format");
+        }
         Customer customer = new Customer(email, firstName, lastName);
         customers.put(email, customer);
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^(.+)@(.+)$";
+        return Pattern.compile(emailRegex).matcher(email).matches();
     }
 
     public Customer getCustomer(String customerEmail) {
